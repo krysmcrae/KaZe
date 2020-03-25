@@ -1,0 +1,70 @@
+﻿@model KaZe.View_Models.DashboardViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div class="jumbotron">
+    <h1>@Model.user.FirstName @Model.user.LastName</h1>
+    <p class="lead">@Model.role</p>
+</div>
+
+<div>
+    <h4>Users Details</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            @if (Model.role == "Project Manager")
+            {
+                <h5>
+                    @Html.Display("Managed Projects")
+                </h5>
+            }
+            else if (Model.role == "Developer")
+            {
+                <h5>
+                    @Html.Display("Projects & Tickets")
+                </h5>
+            }
+            else if (Model.role == "Submitter")
+            {
+                <h5>
+                    @Html.Display("Projects & Submitted Tickets")
+                </h5>
+            }
+            <dl class="dl-horizontal">
+                @foreach (var proj in Model.assignedProjects)
+                {
+                    <dt>
+                        @Html.ActionLink(proj.Name, "Details", "Projects", new { id = proj.Id }, null)
+                    </dt>
+
+                    foreach (var tick in proj.Tickets)
+                    {
+                        if (tick.AssignedToUserId == Model.user.Id && Model.role == "Developer")
+                        {
+                            <dd>
+                                @Html.ActionLink(tick.Title, "Details", "Tickets", new { id = tick.Id }, null)
+                            </dd>
+                        }
+                        else if (tick.SubmittedByUserId == Model.user.Id && Model.role == "Submitter")
+                        {
+                            <dd>
+                                @Html.ActionLink(tick.Title, "Details", "Tickets", new { id = tick.Id }, null)
+                            </dd>
+                        }
+
+                    }
+
+                }
+
+
+            </dl>
+        </div>
+
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to Dashboard", "Index")
+</p>

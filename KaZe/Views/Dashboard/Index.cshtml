@@ -1,0 +1,1286 @@
+﻿@model KaZe.View_Models.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+
+
+}
+@*Font Awesome
+    <link href="~/Content/all.min.css" rel="stylesheet" />
+     Ionicons
+    <link rel="stylesheet" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+     DataTables
+    <link href="~/Content/dataTables.bootstrap4.min.css" rel="stylesheet" />
+     Theme style
+    <link href="~/Content/adminlte.min.css" rel="stylesheet" />
+     Google Font: Source Sans Pro
+    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">*@
+@if (Model.role == "Global Admin" || Model.role == "Demo Admin" || Model.role == "Admin")
+{
+    #region Admin Dashboard
+    #region Project & Ticket Tables
+    <div class="row">
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllProjectsCollapseAdmin" aria-expanded="false" aria-controls="AllProjectsCollapseAdmin" style="color:azure">Projects Section</h5>
+                <div class="collapse multi-collapse" id="AllProjectsCollapseAdmin">
+                    <br />
+                    <h4>All Projects</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Project Name: activate to sort column descending">Project</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending">Description</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var proj in Model.projects)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => proj.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => proj.Description)
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+                                                    @Html.ActionLink("Edit", "Edit", "Projects", new { id = proj.Id }, null)
+                                                    <br />
+                                                    @Html.ActionLink("Details", "Details", "Projects", new { id = proj.Id }, null)
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", "Projects", new { id = proj.Id }, null)
+                                                </td>
+                                                break;
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllTicketsCollapseAdmin" aria-expanded="false" aria-controls="AllTicketsCollapseAdmin" style="color:azure">Tickets Section</h5>
+                <div class="collapse multi-collapse" id="AllTicketsCollapseAdmin">
+                    <br />
+                    <h4>All Tickets</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Priority: activate to sort column descending">Priority</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Ticket Status: activate to sort column ascending">Ticket Status</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending">Project</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Ticket Type: activate to sort column ascending">Type</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Assigned To Developer: activate to sort column ascending">Assigned To</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Submitted By User: activate to sort column ascending">Submitted By</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Created Date: activate to sort column ascending">Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var tick in Model.tickets)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.TicketPriority.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.TicketStatus.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.Project.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.TicketType.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.AssignedToUser.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.SubmittedByUser.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => tick.Created)
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+                                                    @Html.ActionLink("Assign", "AssignTicket", "Tickets", new { id = tick.Id }, null)
+                                                    <br />
+                                                    @Html.ActionLink("Edit", "Edit", "Tickets", new { id = tick.Id }, null)
+                                                    <br />
+                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }, null)
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }, null)
+                                                </td>
+                                                break;
+
+
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    #endregion
+    #region All User Tables
+    <div class="row">
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllProjectManagersCollapseAdmin" aria-expanded="false" aria-controls="AllProjectManagersCollapseAdmin" style="color:azure">Project Managers</h5>
+                <div class="collapse multi-collapse" id="AllProjectManagersCollapseAdmin">
+                    <br />
+                    <h4>All Project Managers</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">First Name</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Last Name: activate to sort column ascending">Last Name</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Projects Managed: activate to sort column ascending">Projects Managed</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var user in Model.personnelPM)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.LastName)
+                                        </td>
+                                        <td>
+                                            @foreach (var p in user.Projects)
+                                            {
+                                                @p.Name
+                                                <br />
+                                            }
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                    <br />
+                                                    @Html.ActionLink("Change Role", "ManageRole", "Admin")
+                                                    <br />
+                                                    @Html.ActionLink("Project Assignments", "ManageUsers", "Projects")
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                </td>
+                                                break;
+
+
+                                        }
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllDevsCollapseAdmin" aria-expanded="false" aria-controls="AllDevsCollapseAdmin" style="color:azure">Developers</h5>
+                <div class="collapse multi-collapse" id="AllDevsCollapseAdmin">
+                    <br />
+                    <h4>All Developers</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr>
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">First Name</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Last Name</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Assigned Projects: activate to sort column ascending">Projects Assigned</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.personnelDev)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.LastName)
+                                        </td>
+                                        <td>
+                                            @foreach (var p in user.Projects)
+                                            {
+                                                <p>-</p>@p.Name
+                                                <br />
+                                                <br />
+
+                                            }
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                    <br />
+                                                    @Html.ActionLink("Change Role", "ManageRole", "Admin")
+                                                    <br />
+                                                    @Html.ActionLink("Project Assignments", "ManageUsers", "Projects")
+
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                </td>
+                                                break;
+
+
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllSubsCollapseAdmin" aria-expanded="false" aria-controls="AllSubsCollapseAdmin" style="color:azure">Submitters</h5>
+                <div class="collapse multi-collapse" id="AllSubsCollapseAdmin">
+                    <br />
+                    <h4>All Submitters</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">First Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Last Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Projects Managed: activate to sort column ascending">Projects Submitted To</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.personnelSub)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.LastName)
+                                        </td>
+                                        <td>
+                                            @foreach (var p in user.Projects)
+                                            {
+                                                @p.Name
+                                                <br />
+                                            }
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                    <br />
+                                                    @Html.ActionLink("Change Role", "ManageRole", "Admin")
+                                                    <br />
+                                                    @Html.ActionLink("Project Assignments", "ManageUsers", "Projects") |
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                </td>
+                                                break;
+
+
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    #endregion
+
+    #endregion
+
+}
+else if (Model.role == "Project Manager")
+{
+
+    #region Project Manager Dashboard
+
+    #region All Project Tables
+
+    <div class="row">
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllProjectsCollapsePM" aria-expanded="false" aria-controls="AllProjectsCollapsePM" style="color:azure">All Projects</h5>
+                <div class="collapse multi-collapse" id="AllProjectsCollapsePM">
+                    <br />
+                    <h4>All Projects</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Project: activate to sort column descending">First Name</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Description: activate to sort column ascending">Last Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var proj in Model.projects)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => proj.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => proj.Description)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", "Projects", new { id = proj.Id }, null)
+                                            <br />
+                                            @Html.ActionLink("Details", "Details", "Projects", new { id = proj.Id }, null)
+                                        </td>
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AssignedProjectsCollapsePM" aria-expanded="false" aria-controls="AssignedProjectsCollapsePM" style="color:azure">Assigned Projects</h5>
+                <div class="collapse multi-collapse" id="AssignedProjectsCollapsePM">
+                    <br />
+                    <h4>All Projects</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Project Name: activate to sort column descending">Project</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending">Description</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var proj in Model.assignedProjects)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => proj.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => proj.Description)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Manage Users", "ManageUsers", "Projects", new { id = proj.Id }, null) |
+                                            @Html.ActionLink("Edit", "Edit", "Projects", new { id = proj.Id }, null) |
+                                            @Html.ActionLink("Details", "Details", "Projects", new { id = proj.Id }, null) |
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    #endregion
+
+
+    #region All Ticket Tables
+    <div class="row">
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllTicketsCollapsePM" aria-expanded="false" aria-controls="AllTicketsCollapsePM" style="color:azure">Unassigned Tickets</h5>
+                <div class="collapse multi-collapse" id="AllTicketsCollapsePM">
+                    <br />
+                    <h4>All Tickets</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Priority: activate to sort column descending">Priority</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Ticket Status: activate to sort column ascending">Ticket Status</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending">Project</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Ticket Type: activate to sort column ascending">Type</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Assigned To Developer: activate to sort column ascending">Assigned To</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Submitted By User: activate to sort column ascending">Submitted By</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Created Date: activate to sort column ascending">Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var proj in Model.assignedProjects)
+                                {
+
+
+                                    foreach (var tick in proj.Tickets)
+                                    {
+                                        if (tick.AssignedToUserId == null)
+                                        {
+                                            <tr role="row">
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.TicketPriority.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.Title)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.TicketStatus.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.Project.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.TicketType.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.AssignedToUser.FirstName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.SubmittedByUser.FirstName)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => tick.Created)
+                                                </td>
+                                                <td>
+                                                    @Html.ActionLink("Assign", "AssignTicket", "Tickets", new { id = tick.Id }, null)
+                                                    <br />
+                                                    @Html.ActionLink("Edit", "Edit", "Tickets", new { id = tick.Id }, null)
+                                                    <br />
+                                                    @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }, null)
+                                                </td>
+
+
+
+                                                }
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AssignedTicketsCollapsePM" aria-expanded="false" aria-controls="AssignedTicketsCollapsePM" style="color:azure">Assigned Tickets</h5>
+                <div class="collapse multi-collapse" id="AssignedTicketsCollapsePM">
+                    <br />
+                    <h4>All Tickets</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Priority: activate to sort column descending">Priority</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Ticket Status: activate to sort column ascending">Ticket Status</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending">Project</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Ticket Type: activate to sort column ascending">Type</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Assigned To Developer: activate to sort column ascending">Assigned To</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Submitted By User: activate to sort column ascending">Submitted By</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Created Date: activate to sort column ascending">Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var proj in Model.assignedProjects)
+                                {
+
+
+                                    foreach (var tick in proj.Tickets)
+                                    {
+                                        <tr role="row">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.TicketPriority.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.Title)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.TicketStatus.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.Project.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.TicketType.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.AssignedToUser.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.SubmittedByUser.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.Created)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Assign", "AssignTicket", "Tickets", new { id = tick.Id }, null)
+                                                <br />
+                                                @Html.ActionLink("Edit", "Edit", "Tickets", new { id = tick.Id }, null)
+                                                <br />
+                                                @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }, null)
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class=" col-md-6">
+            <div class="box-header">
+                <h3 class="box-title">Assigned Tickets</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Priority: activate to sort column descending">Priority</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Ticket Status: activate to sort column ascending">Ticket Status</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending">Project</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Ticket Type: activate to sort column ascending">Type</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Assigned To Developer: activate to sort column ascending">Assigned To</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Submitted By User: activate to sort column ascending">Submitted By</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Created Date: activate to sort column ascending">Created</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var tick in Model.assignedTickets)
+                                    {
+                                        <tr role="row">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.TicketPriority.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.Title)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.TicketStatus.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.Project.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.TicketType.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.AssignedToUser.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.SubmittedByUser.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => tick.Created)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Assign", "AssignTicket", "Tickets", new { id = tick.Id }) |
+                                                @Html.ActionLink("Edit", "Edit", "Tickets", new { id = tick.Id }) |
+                                                @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }) |
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div><!--Assigned Tickets Table-->
+    </div>
+    #endregion
+
+
+    #region All User Tables
+    <div class="row">
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllProjectManagersCollapseAdmin" aria-expanded="false" aria-controls="AllProjectManagersCollapseAdmin" style="color:azure">Project Managers</h5>
+                <div class="collapse multi-collapse" id="AllProjectManagersCollapseAdmin">
+                    <br />
+                    <h4>All Project Managers</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">@Html.Display("First Name")</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">@Html.Display("Last Name")</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Projects Managed: activate to sort column ascending">@Html.Display("Projects Managed")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var user in Model.personnelPM)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.LastName)
+                                        </td>
+                                        <td>
+                                            @foreach (var p in user.Projects)
+                                            {
+                                                @p.Name
+                                                <br />
+                                            }
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                    <br />
+                                                    @Html.ActionLink("Change Role", "ManageRole", "Admin")
+                                                    <br />
+                                                    @Html.ActionLink("Project Assignments", "ManageUsers", "Projects")
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                </td>
+                                                break;
+
+
+                                        }
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllDevsCollapseAdmin" aria-expanded="false" aria-controls="AllDevsCollapseAdmin" style="color:azure">Developers</h5>
+                <div class="collapse multi-collapse" id="AllDevsCollapseAdmin">
+                    <br />
+                    <h4>All Developers</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr>
+                                    <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">@Html.Display("First Name")</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">@Html.Display("Last Name")</th>
+                                    <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="Assigned Projects: activate to sort column ascending">@Html.Display("Projects Assigned")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.personnelDev)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.LastName)
+                                        </td>
+                                        <td>
+                                            @foreach (var p in user.Projects)
+                                            {
+                                                <p>-</p>@p.Name
+                                                <br />
+                                                <br />
+
+                                            }
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                    <br />
+                                                    @Html.ActionLink("Change Role", "ManageRole", "Admin")
+                                                    <br />
+                                                    @Html.ActionLink("Project Assignments", "ManageUsers", "Projects")
+
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                </td>
+                                                break;
+
+
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card ">
+                <h5 class="card-header bg-primary " data-toggle="collapse" href="#AllSubsCollapseAdmin" aria-expanded="false" aria-controls="AllSubsCollapseAdmin" style="color:azure">Submitters</h5>
+                <div class="collapse multi-collapse" id="AllSubsCollapseAdmin">
+                    <br />
+                    <h4>All Submitters</h4>
+                    <div class="card-body">
+                        <table class="table table-striped table-bordered myTables" style="width: auto">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">@Html.Display("First Name")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">@Html.Display("Last Name")</th>
+                                    <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Projects Managed: activate to sort column ascending">@Html.Display("Projects Submitted To")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model.personnelSub)
+                                {
+                                    <tr role="row">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => user.LastName)
+                                        </td>
+                                        <td>
+                                            @foreach (var p in user.Projects)
+                                            {
+                                                @p.Name
+                                                <br />
+                                            }
+                                        </td>
+                                        @switch (Model.role)
+                                        {
+                                            case "Global Admin":
+                                            case "Admin":
+                                                <td>
+
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                    <br />
+                                                    @Html.ActionLink("Change Role", "ManageRole", "Admin")
+                                                    <br />
+                                                    @Html.ActionLink("Project Assignments", "ManageUsers", "Projects") |
+                                                </td>
+                                                break;
+                                            case "Demo Admin":
+                                                <td>
+                                                    @Html.ActionLink("Details", "Details", new { id = user.Id })
+                                                </td>
+                                                break;
+
+
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class=" col-md-6">
+
+            <div class="box-header">
+                <h3 class="box-title">All Developers</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">@Html.Display("First Name")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">@Html.Display("Last Name")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Assigned Projects: activate to sort column ascending">@Html.Display("Projects Managed")</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var user in Model.personnelDev)
+                                    {
+                                        <tr role="row">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => user.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => user.LastName)
+                                            </td>
+                                            <td>
+                                                @foreach (var p in user.Projects)
+                                                {
+                                                    @p.Name
+                                                    <br />
+                                                }
+                                            </td>
+                                            <td>
+
+                                                @Html.ActionLink("Detail", "Details") |
+                                                @Html.ActionLink("Change Role", "ManageRole", "Admin") |
+                                                @Html.ActionLink("Project Assignments", "ManageUsers", "Projects") |
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    @*<tr><th rowspan="1" colspan="1">Rendering engine</th><th rowspan="1" colspan="1">Browser</th><th rowspan="1" colspan="1">Platform(s)</th><th rowspan="1" colspan="1">Engine version</th><th rowspan="1" colspan="1">CSS grade</th></tr>*@
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!--/.box-body-->
+        </div><!-- Developers Table-->
+        <div class=" col-md-6">
+            <div class="box-header">
+                <h3 class="box-title">All Submitters</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                    <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                        <div class="col-sm-12">
+                            <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">@Html.Display("First Name")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">@Html.Display("Last Name")</th>
+                                        <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Projects Managed: activate to sort column ascending">@Html.Display("Projects Managed")</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var user in Model.personnelSub)
+                                    {
+                                        <tr role="row">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => user.FirstName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => user.LastName)
+                                            </td>
+                                            <td>
+                                                @foreach (var p in user.Projects)
+                                                {
+                                                    @p.Name
+                                                    <br />
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Detail", "Details") |
+                                                @Html.ActionLink("Change Role", "ManageRole", "Admin") |
+                                                @Html.ActionLink("Project Assignments", "ManageUsers", "Projects") |
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    @*<tr><th rowspan="1" colspan="1">Rendering engine</th><th rowspan="1" colspan="1">Browser</th><th rowspan="1" colspan="1">Platform(s)</th><th rowspan="1" colspan="1">Engine version</th><th rowspan="1" colspan="1">CSS grade</th></tr>*@
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <!--/.box-body-->
+        </div><!-- Submitters Table-->
+    </div>
+
+    #endregion
+
+    #endregion
+
+
+}
+else if (Model.role == "Developer")
+{
+    #region Assigned Projects Table
+
+    <div class="box-header">
+        <h3 class="box-title">Assigned Projects</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                <div class="col-sm-12">
+                    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Project Name: activate to sort column descending">Project</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending">Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var proj in Model.assignedProjects)
+                            {
+                                <tr role="row">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => proj.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => proj.Description)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Details", "Details", "Projects", new { id = proj.Id }, null) |
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+    #endregion
+
+    #region-Assigned Tickets Table
+
+    <div class="box-header">
+        <h3 class="box-title">Assigned Tickets</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                <div class="col-sm-12">
+                    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Priority: activate to sort column descending">Priority</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Ticket Status: activate to sort column ascending">Ticket Status</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending">Project</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Ticket Type: activate to sort column ascending">Type</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Assigned To Developer: activate to sort column ascending">Assigned To</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Submitted By User: activate to sort column ascending">Submitted By</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Created Date: activate to sort column ascending">Created</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var tick in Model.assignedTickets)
+                            {
+                                <tr role="row">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.TicketPriority.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.TicketStatus.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.Project.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.TicketType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.AssignedToUser.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.SubmittedByUser.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.Created)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", "Tickets", new { id = tick.Id }) |
+                                        @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }) |
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+    #endregion
+
+
+
+}
+else if (Model.role == "Submitter")
+{
+    #region Projects Table
+
+    <div class="box-header">
+        <h3 class="box-title">Projects</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                <div class="col-sm-12">
+                    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Project Name: activate to sort column descending">Project</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending">Description</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var proj in Model.projects)
+                            {
+                                <tr role="row">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => proj.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => proj.Description)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Details", "Details", "Projects", new { id = proj.Id }, null) |
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+    #endregion
+
+    #region- Tickets Table
+
+    <div class="box-header">
+        <h3 class="box-title">Submitted Tickets</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row">
+                <div class="col-sm-12">
+                    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting_asc" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Priority: activate to sort column descending">Priority</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Title: activate to sort column ascending">Title</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Ticket Status: activate to sort column ascending">Ticket Status</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Project: activate to sort column ascending">Project</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Ticket Type: activate to sort column ascending">Type</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Assigned To Developer: activate to sort column ascending">Assigned To</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Submitted By User: activate to sort column ascending">Submitted By</th>
+                                <th class="sorting" tabindex="0" aria-controls="example2" rowspan="1" colspan="1" aria-label="Created Date: activate to sort column ascending">Created</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var tick in Model.tickets)
+                            {
+                                <tr role="row">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.TicketPriority.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.TicketStatus.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.Project.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.TicketType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.AssignedToUser.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.SubmittedByUser.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => tick.Created)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", "Tickets", new { id = tick.Id }) |
+                                        @Html.ActionLink("Details", "Details", "Tickets", new { id = tick.Id }) |
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+    #endregion
+
+
+
+}
+@*jQuery
+    <script src="~/Scripts/jquery.min.js"></script>
+     Bootstrap 4
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+     DataTables
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
+     AdminLTE App
+    <script src="~/Scripts/adminlte.min.js"></script>
+     page script
+    <script>
+        $(function () {
+            $('#example2').DataTable({
+                                        "paging": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+            });
+                                });
+    </script>*@
+
+
+

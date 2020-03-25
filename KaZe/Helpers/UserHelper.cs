@@ -11,6 +11,7 @@ namespace KaZe.Helpers
     public class UserHelper
     {
         private static ApplicationDbContext db = new ApplicationDbContext();
+        private static RolesHelper roleHelper = new RolesHelper();
         public static string RetrieveDisplayName()
         {
             var userId =HttpContext.Current.User.Identity.GetUserId();
@@ -25,6 +26,17 @@ namespace KaZe.Helpers
         {
             var projects = db.Projects.ToList();
             return projects;
+        }
+        public static string RetrieveRole()
+        {
+            var userId = HttpContext.Current.User.Identity.GetUserId();
+            if (userId == null)
+            {
+                return "Demo Admin";
+            }
+            
+            var role = roleHelper.ListUserRoles(userId).FirstOrDefault();
+            return (role);
         }
     }
 }

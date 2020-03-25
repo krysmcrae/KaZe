@@ -14,7 +14,8 @@ namespace KaZe.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
+            ContextKey = "KaZe.Models.ApplicationDbContext";
         }
 
         protected override void Seed(KaZe.Models.ApplicationDbContext context)
@@ -512,8 +513,6 @@ namespace KaZe.Migrations
             #endregion
 
             #endregion
-
-
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
         }

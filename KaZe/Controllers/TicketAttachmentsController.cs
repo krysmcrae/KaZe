@@ -1,15 +1,18 @@
-﻿using System;
+﻿using KaZe.Helpers;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using KaZe.Models;
 
-namespace KaZe.Controllers
+namespace KaZe.Models
 {
+    [Authorize]
     public class TicketAttachmentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -49,14 +52,21 @@ namespace KaZe.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,AttachmentPath,Description,Created,UserId")] TicketAttachment ticketAttachment)
+        public ActionResult Create([Bind(Include = "TicketId,Description")] TicketAttachment ticketAttachment, HttpPostedFileBase attachment)
         {
             if (ModelState.IsValid)
             {
+                var fileName = Path.GetFileName(attachment.FileName);
+                attachment.SaveAs(Path.Combine(Server.MapPath("~/Attachments/"), fileName));
+                ticketAttachment.Created = DateTime.Now;
+                ticketAttachment.AttachmentPath = "/Attachments/" + fileName;
+                ticketAttachment.UserId = User.Identity.GetUserId();
                 db.TicketAttachments.Add(ticketAttachment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details","Tickets",new { id = ticketAttachment.TicketId });
             }
+
+            NotificationManager.ManageAttachmentNotifications(ticketAttachment);
 
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);
             ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", ticketAttachment.UserId);
